@@ -1,15 +1,25 @@
-package com.game.model;
+package com.game.entity;
 
-import com.game.entity.Profession;
-import com.game.entity.Race;
+import javax.persistence.*;
+import java.util.Date;
 
+@Entity // todo нужна ли Table name player
 public class Player {
+    //@GeneratedValue(strategy = GenerationType.IDENTITY) //todo нужна ли
+    @Id
     private Long id;
+
     private String name;
+
     private String title;
+
+    @Enumerated(EnumType.STRING)
     private Race race;
+
+    @Enumerated(EnumType.STRING)
     private Profession profession;
-    private Long birthday;
+
+    private Date birthday;
     private Boolean banned;
     private Integer experience;
     private Integer level;
@@ -55,11 +65,11 @@ public class Player {
         this.profession = profession;
     }
 
-    public Long getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Long birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

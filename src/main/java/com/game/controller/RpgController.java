@@ -3,7 +3,9 @@ package com.game.controller;
 import com.game.entity.Profession;
 import com.game.entity.Race;
 import com.game.exception.NotFoundException;
-import com.game.model.Player;
+import com.game.entity.Player;
+import com.game.service.PlayerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -13,20 +15,16 @@ import java.util.List;
 @RequestMapping("/rest")
 public class RpgController {
 
+    private PlayerService playerService;
+
+    @Autowired
+    public RpgController(PlayerService playerService) {
+        this.playerService = playerService;
+    }
+
     @GetMapping("/players")
     public List<Player> getPlayers() {
-        Player player = new Player();
-        player.setId(1L);
-//        player.setName("Happy new year");
-        player.setProfession(Profession.PALADIN);
-//        player.setBanned(false);
-//        player.setBirthday(new Date().getTime());
-//        player.setExperience(250);
-//        player.setLevel(11);
-        player.setRace(Race.ELF);
-//        player.setTitle("Новый год");
-//        player.setUntilNextLevel(1);
-        return Collections.singletonList(player);
+        return playerService.getAllPlayers();
     }
 
     @GetMapping("/players/count")
