@@ -1,6 +1,7 @@
 package com.game.service;
 
 import com.game.entity.Player;
+import com.game.model.PlayerRequest;
 
 import java.util.List;
 
@@ -10,4 +11,7 @@ import java.util.List;
 public interface PlayerService {
     List<Player> getAllPlayers();
 
+    long count();
+
+    Player createPlayer(PlayerRequest playerRequest);
 }

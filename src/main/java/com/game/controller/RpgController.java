@@ -1,14 +1,14 @@
 package com.game.controller;
 
+import com.game.entity.Player;
 import com.game.entity.Profession;
 import com.game.entity.Race;
-import com.game.exception.NotFoundException;
-import com.game.entity.Player;
+import com.game.model.exception.NotFoundException;
+import com.game.model.PlayerRequest;
 import com.game.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -28,17 +28,13 @@ public class RpgController {
     }
 
     @GetMapping("/players/count")
-    public Integer getPlayersCount() {
-        return 1;
+    public long getPlayersCount() {
+        return playerService.count();
     }
 
     @PostMapping("/players")
-    public Player getNewPlayer() {
-        Player player = new Player();
-        player.setId(2L);
-        player.setProfession(Profession.WARRIOR);
-        player.setRace(Race.HUMAN);
-        return player;
+    public Player getNewPlayer(@RequestBody PlayerRequest playerRequest) {
+        return playerService.createPlayer(playerRequest);
     }
 
     @GetMapping("/players/{id}")

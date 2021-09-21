@@ -3,14 +3,12 @@ package com.game.entity;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity // todo нужна ли Table name player
+@Entity
 public class Player {
-    //@GeneratedValue(strategy = GenerationType.IDENTITY) //todo нужна ли
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
-
     private String title;
 
     @Enumerated(EnumType.STRING)
