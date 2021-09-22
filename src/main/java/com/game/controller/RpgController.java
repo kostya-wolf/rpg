@@ -1,9 +1,6 @@
 package com.game.controller;
 
 import com.game.entity.Player;
-import com.game.entity.Profession;
-import com.game.entity.Race;
-import com.game.model.exception.NotFoundException;
 import com.game.model.PlayerRequest;
 import com.game.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +20,13 @@ public class RpgController {
     }
 
     @GetMapping("/players")
-    public List<Player> getPlayers() {
-        return playerService.getAllPlayers();
+    public List<Player> getPlayers(@ModelAttribute PlayerRequest playerRequest) {
+        return playerService.getAllPlayers(playerRequest);
     }
 
     @GetMapping("/players/count")
-    public long getPlayersCount() {
-        return playerService.count();
+    public long getPlayersCount(@ModelAttribute PlayerRequest playerRequest) {
+        return playerService.count(playerRequest);
     }
 
     @PostMapping("/players")

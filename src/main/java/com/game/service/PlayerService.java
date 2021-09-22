@@ -9,9 +9,9 @@ import java.util.List;
  * Интерфейс сервиса для работы с PlayerRepository
  */
 public interface PlayerService {
-    List<Player> getAllPlayers();
+    List<Player> getAllPlayers(PlayerRequest request);
 
-    long count();
+    long count(PlayerRequest playerRequest);
 
     Player createPlayer(PlayerRequest playerRequest);
 
