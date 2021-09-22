@@ -39,20 +39,16 @@ public class RpgController {
 
     @GetMapping("/players/{id}")
     public Player getPlayerById(@PathVariable("id") long id) {
-        throw new NotFoundException("Не корректный id: " + id);
+        return playerService.getPlayerById(id);
     }
 
     @PostMapping("/players/{id}")
-    public Player updatePlayer(@PathVariable("id") long id) {
-        Player player = new Player();
-        player.setId(2L);
-        player.setProfession(Profession.DRUID);
-        player.setRace(Race.HUMAN);
-        return player;
+    public Player updatePlayer(@PathVariable("id") long id, @RequestBody PlayerRequest playerRequest) {
+        return playerService.updatePlayer(id, playerRequest);
     }
 
     @DeleteMapping("/players/{id}")
     public void deletePlayer(@PathVariable("id") long id) {
-        throw new NotFoundException("Не корректный id: " + id);
+        playerService.deletePlayer(id);
     }
 }

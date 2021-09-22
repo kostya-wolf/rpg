@@ -14,4 +14,10 @@ public interface PlayerService {
     long count();
 
     Player createPlayer(PlayerRequest playerRequest);
+
+    Player getPlayerById(long id);
+
+    void deletePlayer(long id);
+
+    Player updatePlayer(long id, PlayerRequest request);
 }

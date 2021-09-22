@@ -3,12 +3,12 @@ package com.game.service;
 import com.game.entity.Player;
 import com.game.model.PlayerRequest;
 import com.game.model.exception.BadRequestException;
+import com.game.model.exception.NotFoundException;
 import com.game.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -41,15 +41,57 @@ public class PlayerServiceImpl implements PlayerService {
     public Player createPlayer(PlayerRequest request) {
         validatePlayerRequest(request);
         Player player = conversionService.convert(request, Player.class);
-        int level = calculateLevel(player.getExperience());
-        player.setLevel(level);
-        player.setUntilNextLevel(calculateUntilNextLevel(level, player.getExperience()));
         return playerRepository.save(player);
+    }
+
+    @Override
+    public Player getPlayerById(long id) {
+        validateId(id);
+        return playerRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    @Override
+    public void deletePlayer(long id) {
+        Player player = getPlayerById(id);
+        playerRepository.delete(player);
+    }
+
+    @Override
+    public Player updatePlayer(long id, PlayerRequest request) {
+        String name = request.getName();
+        if (name != null) {
+            validateName(name);
+        }
+        String title = request.getTitle();
+        if (title != null) {
+            validateTitle(title);
+        }
+        Long birthday = request.getBirthday();
+        if (birthday != null) {
+            validateBirthday(birthday);
+        }
+        String experience = request.getExperience();
+        if (experience != null) {
+            validateExperience(experience);
+        }
+        Player player = conversionService.convert(request, Player.class);
+        return playerRepository.save(player);
+    }
+
+    private void validateName(String name) {
+        if (name.isEmpty()) {
+            throw new BadRequestException("Пустая строка name");
+        }
+        validateParamByLength(name, 12);
+    }
+
+    private void validateTitle(String title) {
+        validateParamByLength(title, 30);
     }
 
     private void validatePlayerRequest(PlayerRequest request) {
         if (request == null
-                || StringUtils.isEmpty(request.getName())
+                || request.getName() == null
                 || request.getTitle() == null
                 || request.getRace() == null
                 || request.getProfession() == null
@@ -57,8 +99,8 @@ public class PlayerServiceImpl implements PlayerService {
                 || request.getExperience() == null) {
             throw new BadRequestException();
         }
-        validateParamByLength(request.getName(), 12);
-        validateParamByLength(request.getTitle(), 30);
+        validateName(request.getName());
+        validateTitle(request.getTitle());
         validateExperience(request.getExperience());
         validateBirthday(request.getBirthday());
         validateRegisterDate();
@@ -95,24 +137,9 @@ public class PlayerServiceImpl implements PlayerService {
         }
     }
 
-    /**
-     * Метод рассчитывает уровень игрока
-     *
-     * @param exp опыт игрока
-     * @return уровень игрока
-     */
-    private int calculateLevel(int exp) {
-        return (int) ((Math.sqrt(2500 + 200 * exp) - 50) / 100);
-    }
-
-    /**
-     * Метод рассчитывает опыт до следующего уровня
-     *
-     * @param level уровень игрока
-     * @param exp опыт игрока
-     * @return опыт до следующего уровня
-     */
-    private Integer calculateUntilNextLevel(Integer level, Integer exp) {
-        return 50 * (level + 1) * (level + 2) - exp;
+    private void validateId(long id) {
+        if (id < 1) {
+            throw new BadRequestException("Не корректный id: " + id);
+        }
     }
 }
